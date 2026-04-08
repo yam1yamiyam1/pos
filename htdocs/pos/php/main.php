@@ -99,15 +99,25 @@ if(!empty($_REQUEST['itemq']))
 	// Split the search input into space-separated tokens, ignoring extra whitespace
 	$tokens = preg_split('/\s+/', $q, -1, PREG_SPLIT_NO_EMPTY);
 	$clauses = [];
-	foreach ($tokens as $token) {
+	foreach ($tokens as $index => $token) {
 		// Escape each token individually to prevent SQL injection
 		$safe = mysqli_real_escape_string($con, $token);
-		// Each token must appear somewhere in the product description
-		$clauses[] = "item_description LIKE '%$safe%'";
+		if ($index === 0) {
+			// First token: product name must START with this token
+			$clauses[] = "item_description LIKE '$safe%'";
+		} else {
+			// Subsequent tokens: must appear anywhere in the product name
+			$clauses[] = "item_description LIKE '%$safe%'";
+		}
 	}
-	// All tokens must match (AND logic) so every word in the search is required
-	$where = implode(' AND ', $clauses);
-	$sql = "Select * from pos_lup_item where ($where) and isdeleted = 0 limit 0,30";
+	// Build WHERE clause: if no tokens (empty search), return all products
+	if (empty($clauses)) {
+		$sql = "Select * from pos_lup_item where isdeleted = 0 limit 0,30";
+	} else {
+		// All tokens must match (AND logic) so every word in the search is required
+		$where = implode(' AND ', $clauses);
+		$sql = "Select * from pos_lup_item where ($where) and isdeleted = 0 limit 0,30";
+	}
 
 	$result = mysqli_query($con, $sql);
 	?>
