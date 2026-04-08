@@ -96,8 +96,18 @@ if(!empty($_REQUEST['itemq']))
 			sub_profiletb.company_name like '$q%') limit 0,10";*/
 	global $con;
 	
-	$sql = "Select * from pos_lup_item where 
-	(item_description like '%$q%' or item_code like '%$q%') and isdeleted = 0 limit 0,30";
+	// Split the search input into space-separated tokens, ignoring extra whitespace
+	$tokens = preg_split('/\s+/', $q, -1, PREG_SPLIT_NO_EMPTY);
+	$clauses = [];
+	foreach ($tokens as $token) {
+		// Escape each token individually to prevent SQL injection
+		$safe = mysqli_real_escape_string($con, $token);
+		// Each token must appear somewhere in the product description
+		$clauses[] = "item_description LIKE '%$safe%'";
+	}
+	// All tokens must match (AND logic) so every word in the search is required
+	$where = implode(' AND ', $clauses);
+	$sql = "Select * from pos_lup_item where ($where) and isdeleted = 0 limit 0,30";
 
 	$result = mysqli_query($con, $sql);
 	?>
