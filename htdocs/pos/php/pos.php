@@ -312,7 +312,6 @@ if(!empty($_POST['add_item_id']))
 		?>
 			<script>
 									$("#search_result").html('');
-									$("#barcode").val('');
 									$("#barcode").blur();
 									$("#modal4").modal("show");
 									$("#modalbody4").css("width","30%");
