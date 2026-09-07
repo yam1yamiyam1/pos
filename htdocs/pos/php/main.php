@@ -110,13 +110,14 @@ if(!empty($_REQUEST['itemq']))
 			$clauses[] = "item_description LIKE '%$safe%'";
 		}
 	}
+	$safeQuery = mysqli_real_escape_string($con, $q);
 	// Build WHERE clause: if no tokens (empty search), return all products
 	if (empty($clauses)) {
 		$sql = "Select * from pos_lup_item where isdeleted = 0 limit 0,30";
 	} else {
 		// All tokens must match (AND logic) so every word in the search is required
 		$where = implode(' AND ', $clauses);
-		$sql = "Select * from pos_lup_item where ($where) and isdeleted = 0 limit 0,30";
+		$sql = "Select * from pos_lup_item where (($where) or item_code LIKE '$safeQuery%') and isdeleted = 0 limit 0,30";
 	}
 
 	$result = mysqli_query($con, $sql);
