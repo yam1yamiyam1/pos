@@ -171,6 +171,10 @@ if(!empty($_REQUEST['itemq']))
 					
 							table.row(0).select();
 							table.cell( ':eq(0)' ).focus();
+							var firstRow = table.row(0).data();
+							if (firstRow && firstRow.length > 0) {
+								$("#clickval").val(firstRow[0]);
+							}
 					 
 							
 						
@@ -178,6 +182,10 @@ if(!empty($_REQUEST['itemq']))
 						$('#searchtable').on('key-focus.dt', function(e, datatable, cell){
 							// Select highlighted row
 							table.row(cell.index().row).select();
+							var focusedData = table.row(cell.index().row).data();
+							if (focusedData && focusedData.length > 0) {
+								$("#clickval").val(focusedData[0]);
+							}
 							
 						});
 						
@@ -187,6 +195,12 @@ if(!empty($_REQUEST['itemq']))
 							var rowIdx = table.cell(this).index().row;
 							
 							table.row(rowIdx).select();
+							var clickedData = table.row(rowIdx).data();
+							if (clickedData && clickedData.length > 0) {
+								$("#clickval").val(clickedData[0]);
+							}
+							$("#barcode").focus();
+							$("#search_result").html('');
 						});  
 						 $('#searchtable').on('key.dt', function(e, datatable, key, cell){
 								// If ENTER key is pressed
