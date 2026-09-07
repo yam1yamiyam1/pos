@@ -195,7 +195,7 @@ if(!empty($_REQUEST['itemq']))
 									var data = table.row(cell.index().row).data();
 								   // alert( table.cell(this).data() );
 									// FOR DEMONSTRATION ONLY
-									$("#barcode").val(data[0]);
+									$("#clickval").val(data[0]);
 									$("#barcode").focus();
 									$("#search_result").html('');
 								}
