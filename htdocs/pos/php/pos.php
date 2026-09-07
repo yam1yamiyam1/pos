@@ -5770,23 +5770,28 @@ if(!empty($_REQUEST['posui2']))
 									
 									if(key == 13)
 									{
-										if($("#barcode").val() != '')
+										var selectedItemCode = $.trim($("#clickval").val());
+										var typedValue = $.trim($("#barcode").val());
+										var itemCodeToAdd = (selectedItemCode != '') ? selectedItemCode : typedValue;
+										if(itemCodeToAdd != '')
 										{
 											//$("#barcode").val('');
 											
 													$.post( 
 																 'php/pos.php',
 																 {
-																	 add_item_id:$("#barcode").val()
+																	 add_item_id:itemCodeToAdd
 																},
 																 function(data) {
 																	$('#click').html(data);
 																	
 																 });
+													$("#clickval").val('');
 										}
 									}
 									else if(key != 13 && key != 40)
 									{
+											$("#clickval").val('');
 											var s = $("#barcode").val();
 																	if(s != "")
 																	{
